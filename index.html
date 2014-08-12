@@ -11,13 +11,13 @@
         var scanApp = angular.module("scanApp", []);
 				
 		scanApp.run(function($http) {
-			$http.get('http://localhost:10000/scans/1').success(function(data) {
+			$http.get('http://bodyspec.toddbranchflower.com/scans/1').success(function(data) {
 				model.scan = data;
 			});
 		});
 
 		scanApp.run(function($http) {
-			$http.get('http://localhost:10000/users').success(function(data) {
+			$http.get('http://bodyspec.toddbranchflower.com/users').success(function(data) {
 				model.users = data;
 			});
 		});
