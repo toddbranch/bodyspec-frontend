@@ -1,49 +1,52 @@
 <!DOCTYPE html>
-<html ng-app="sportsStore">
+<html ng-app="scanApp">
 <head>
-    <title>SportsStore</title>
+    <title>Scan App</title>
     <script src="angular.js"></script>
     <link href="bootstrap.min.css" rel="stylesheet" />
     <link href="bootstrap-theme.min.css" rel="stylesheet" />
     <script>
-				var model = {};
+		var model = {};
 
-        var sportsStore = angular.module("sportsStore", ["customFilters"]);
+        var scanApp = angular.module("scanApp", []);
 				
-				sportsStore.run(function($http) {
-						$http.get('products').success(function(data) {
-							model.products = data;
-						});
-				});
+		scanApp.run(function($http) {
+			$http.get('http://localhost:10000/scans/1').success(function(data) {
+				model.scan = data;
+			});
+		});
+
+		scanApp.run(function($http) {
+			$http.get('http://localhost:10000/users').success(function(data) {
+				model.users = data;
+			});
+		});
+
+		scanApp.controller("scanAppCtrl", function($scope) {
+			$scope.data = model;
+			
+		});
     </script>
-    <script src="sportsStore.js"></script>
-    <script src="customFilters.js"></script>
-    <script src="productListCtrl.js"></script>
 </head>
-<body ng-controller="sportsStoreCtrl">
+<body ng-controller="scanAppCtrl">
     <div class="navbar navbar-inverse">
-        <a class="navbar-brand" href="#">SPORTS STORE</a>
+        <a class="navbar-brand" href="#">BodySpec</a>
     </div>
-    <div class="panel panel-default row" ng-controller="productListCtrl">
-				<div class="col-xs-3"> 
-					<a ng-click="selectCategory()"
-						 class="btn btn-block btn-default btn-lg">Home</a>
-					<a ng-repeat="item in data.products | orderBy:'category' | unique:'category'"
-						 ng-click="selectCategory(item)" class=" btn btn-block btn-default btn-lg" ng-class="getCategoryClass(item)">
-							{{item}}
-					</a>
+    <div class="panel panel-default row">
+		<div class="col-xs-3"> 
+			<ul>
+				<li ng-repeat="user in data.users | orderBy:'LastName'">
+					<a href="#">{{user.FirstName}} {{user.LastName}}</a>
+				</li>
+			</ul>
         </div>
-				<div class="col-xs-8">
-					<div class="well" ng-repeat="item in data.products | filter:categoryFilterFn">
-						<h3>
-								<strong>{{item.name}}</strong>
-								<span class="pull-right label label-primary">
-										{{item.price | currency}}
-								</span>
-						</h3>
-						<span class="lead">{{item.description}}</span>
-					</div>
+		<div class="col-xs-8">
+			<ul> 
+				<li ng-repeat="(field, value) in data.scan">
+					{{field}}: {{value}}
+				</li>
+			</ul>
         </div>
-    </div>
+	</div>
 </body>
 </html>
